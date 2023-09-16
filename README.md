@@ -1,3 +1,7 @@
+# PROJECT
+<h2>In this project is development a real-time discord clone, all with servers, channels, video calls, audio calls, editing and deleting messages as well as member roles.
+  Its just de begin of the full project. I'm development this with the classes of channel code with Antonio. I will commit each step until the end.  </h2>
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
