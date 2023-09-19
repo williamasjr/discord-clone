@@ -75,7 +75,7 @@ dependencies:
     specifier: 10.4.15
     version: 10.4.15(postcss@8.4.28)
   axios:
-    specifier: ^1.4.0
+    specifier: ^1.5.0
     version: 1.5.0
   class-variance-authority:
     specifier: ^0.7.0
@@ -153,7 +153,7 @@ dependencies:
     specifier: ^5.6.0
     version: 5.6.0(zod@3.22.2)
   uuid:
-    specifier: ^9.0.0
+    specifier: ^9.0.1
     version: 9.0.1
   zod:
     specifier: ^3.22.2
@@ -164,7 +164,7 @@ dependencies:
 
 devDependencies:
   '@types/uuid':
-    specifier: ^9.0.2
+    specifier: ^9.0.4
     version: 9.0.4
   prisma:
     specifier: ^5.1.1
