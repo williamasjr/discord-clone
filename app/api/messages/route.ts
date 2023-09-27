@@ -1,7 +1,8 @@
+import { NextResponse } from "next/server";
+import { Message } from "@prisma/client";
+
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { Message } from "@prisma/client";
-import { NextResponse } from "next/server";
 
 const MESSAGES_BATCH = 10;
 
@@ -67,7 +68,7 @@ export async function GET(
 
     let nextCursor = null;
 
-    if (messages.length == MESSAGES_BATCH) {
+    if (messages.length === MESSAGES_BATCH) {
       nextCursor = messages[MESSAGES_BATCH - 1].id;
     }
 
@@ -75,7 +76,6 @@ export async function GET(
       items: messages,
       nextCursor
     });
-
   } catch (error) {
     console.log("[MESSAGES_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });

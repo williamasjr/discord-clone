@@ -1,21 +1,26 @@
-import { ChatHeader } from "@/components/chat/chat-header";
-import { ChatInput } from "@/components/chat/chat-input";
-import { ChatMessages } from "@/components/chat/chat-messages";
-import { getOrCreateConversation } from "@/lib/conversation";
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
 import { redirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+
+import { db } from "@/lib/db";
+import { getOrCreateConversation } from "@/lib/conversation";
+import { currentProfile } from "@/lib/current-profile";
+import { ChatHeader } from "@/components/chat/chat-header";
+import { ChatMessages } from "@/components/chat/chat-messages";
+import { ChatInput } from "@/components/chat/chat-input";
 
 interface MemberIdPageProps {
   params: {
     memberId: string;
     serverId: string;
+  },
+  searchParams: {
+    video?: boolean;
   }
 }
 
 const MemberIdPage = async ({
-  params
+  params,
+  searchParams,
 }: MemberIdPageProps) => {
   const profile = await currentProfile();
 
@@ -40,7 +45,7 @@ const MemberIdPage = async ({
   const conversation = await getOrCreateConversation(currentMember.id, params.memberId);
 
   if (!conversation) {
-    return redirect(`/server/${params.serverId}`);
+    return redirect(`/servers/${params.serverId}`);
   }
 
   const { memberOne, memberTwo } = conversation;
@@ -55,6 +60,7 @@ const MemberIdPage = async ({
         serverId={params.serverId}
         type="conversation"
       />
+
       <ChatMessages
         member={currentMember}
         name={otherMember.profile.name}

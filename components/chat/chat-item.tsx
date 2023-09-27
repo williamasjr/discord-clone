@@ -3,27 +3,25 @@
 import * as z from "zod";
 import axios from "axios";
 import qs from "query-string";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Member, MemberRole, Profile } from "@prisma/client";
-import { UserAvatar } from "../user-avatar";
-import { ActionTooltip } from "../action-tooltip";
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-
 import { useRouter, useParams } from "next/navigation";
 
+import { UserAvatar } from "@/components/user-avatar";
+import { ActionTooltip } from "@/components/action-tooltip";
+import { cn } from "@/lib/utils";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-} from "@/components/ui/form"
-
-import { useForm } from "react-hook-form";
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useModal } from "@/hooks/use-modal-store";
 
 interface ChatItemProps {
@@ -39,7 +37,7 @@ interface ChatItemProps {
   isUpdated: boolean;
   socketUrl: string;
   socketQuery: Record<string, string>;
-}
+};
 
 const roleIconMap = {
   "GUEST": null,
@@ -61,20 +59,19 @@ export const ChatItem = ({
   currentMember,
   isUpdated,
   socketUrl,
-  socketQuery,
+  socketQuery
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { onOpen } = useModal();
   const params = useParams();
   const router = useRouter();
 
-  const onMemberKeyDown = () => {
+  const onMemberClick = () => {
     if (member.id === currentMember.id) {
       return;
     }
 
     router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
-
   }
 
   useEffect(() => {
@@ -86,13 +83,13 @@ export const ChatItem = ({
 
     window.addEventListener("keydown", handleKeyDown);
 
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [])
+    return () => window.removeEventListener("keyDown", handleKeyDown);
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      content: content,
+      content: content
     }
   });
 
@@ -118,7 +115,7 @@ export const ChatItem = ({
     form.reset({
       content: content,
     })
-  }, [content])
+  }, [content, form]);
 
   const fileType = fileUrl?.split(".").pop();
 
@@ -133,17 +130,13 @@ export const ChatItem = ({
   return (
     <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
       <div className="group flex gap-x-2 items-start w-full">
-        <div
-          onClick={onMemberKeyDown}
-          className="cursor-pointer hover:drop-shadow-md transition">
+        <div onClick={onMemberClick} className="cursor-pointer hover:drop-shadow-md transition">
           <UserAvatar src={member.profile.imageUrl} />
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-x-2">
             <div className="flex items-center">
-              <p
-                onClick={onMemberKeyDown}
-                className="font-semibold text-sm hover:underline cursor-pointer">
+              <p onClick={onMemberClick} className="font-semibold text-sm hover:underline cursor-pointer">
                 {member.profile.name}
               </p>
               <ActionTooltip label={member.role}>
@@ -159,8 +152,7 @@ export const ChatItem = ({
               href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative aspect-square rounded-md overflow-hidden border
-            flex items-center bg-secondary h-48 w-48"
+              className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
             >
               <Image
                 src={fileUrl}
@@ -171,17 +163,15 @@ export const ChatItem = ({
             </a>
           )}
           {isPDF && (
-            <div className="relative flex items-center p-2 mt-2 rounded-md
-              bg-background/10">
+            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
               <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
               <a
                 href={fileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-2 text-sem text-indigo-500 dark:text-indigo-400
-					        hover:underline"
+                className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
               >
-                PDF file
+                PDF File
               </a>
             </div>
           )}
@@ -212,8 +202,7 @@ export const ChatItem = ({
                         <div className="relative w-full">
                           <Input
                             disabled={isLoading}
-                            className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0
-                            focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
+                            className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                             placeholder="Edited message"
                             {...field}
                           />
@@ -222,11 +211,7 @@ export const ChatItem = ({
                     </FormItem>
                   )}
                 />
-                <Button
-                  disabled={isLoading}
-                  size="sm"
-                  variant="primary"
-                >
+                <Button disabled={isLoading} size="sm" variant="primary">
                   Save
                 </Button>
               </form>
@@ -247,7 +232,7 @@ export const ChatItem = ({
               />
             </ActionTooltip>
           )}
-          <ActionTooltip label="Deleted">
+          <ActionTooltip label="Delete">
             <Trash
               onClick={() => onOpen("deleteMessage", {
                 apiUrl: `${socketUrl}/${id}`,

@@ -1,6 +1,7 @@
+import { NextResponse } from "next/server";
+
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
 
 export async function DELETE(
   req: Request,
@@ -21,7 +22,7 @@ export async function DELETE(
     }
 
     if (!params.memberId) {
-      return new NextResponse("Member ID missing", { status: 500 });
+      return new NextResponse("Member ID missing", { status: 400 });
     }
 
     const server = await db.server.update({
@@ -52,7 +53,6 @@ export async function DELETE(
     });
 
     return NextResponse.json(server);
-
   } catch (error) {
     console.log("[MEMBER_ID_DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
@@ -79,12 +79,13 @@ export async function PATCH(
     }
 
     if (!params.memberId) {
-      return new NextResponse("Member ID missing", { status: 500 });
+      return new NextResponse("Member ID missing", { status: 400 });
     }
+
     const server = await db.server.update({
       where: {
         id: serverId,
-        profileId: profile?.id,
+        profileId: profile.id,
       },
       data: {
         members: {
@@ -114,9 +115,8 @@ export async function PATCH(
     });
 
     return NextResponse.json(server);
-
   } catch (error) {
-    console.log("[MEMBER_ID_PATCH]", error);
+    console.log("[MEMBERS_ID_PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
